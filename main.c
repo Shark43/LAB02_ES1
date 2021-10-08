@@ -1,47 +1,58 @@
 #include <stdio.h>
 
-int gcd(int a, int b);
+int gcdRecursive(int a, int b);
 int isEven(int a);
 void swapVar(int *a, int *b);
 int gcdDijkstra(int a, int b);
+int gcd(int a, int b);
 int main( )
 {
-    int a = 314159, b = 271828;
+    int a = 0, b = 0;
 
-    int risMyCode = gcd(a, b);
-    int risDij = gcdDijkstra(a, b);
-    if(risDij != risMyCode) {
-        printf("Errore nel codice i due risultati sono diversi: %d - %d", risMyCode, risDij);
-    } else if(risMyCode == 0) {
-        printf("I 2 numeri sono primi tra loro");
-    } else {
-        printf("La gcd è %d", risMyCode);
-    }
+    printf("Inserisci il primo numero: ");
+    scanf("%d", &a);
+    printf("Inserisci il secondo numero: ");
+    scanf("%d", &b);
+    gcd(a, b);
 
 
     return 0;
 }
 
 int gcd(int a, int b) {
+    int ka = a, kb = b;
+    int risMyCode = gcdRecursive(a, b);
+    printf("\n DIO %d, %d\n", a, b);
+    int risDij = gcdDijkstra(ka, kb);
+
+    if(risDij != risMyCode) {
+        printf("Errore nel codice i due risultati sono diversi: %d - %d", risMyCode, risDij);
+    } else if(risMyCode == 1) {
+        printf("I 2 numeri sono primi tra loro");
+    } else {
+        printf("La gcd e' %d", risMyCode);
+    }
+}
+
+int gcdRecursive(int a, int b) {
     if(a < b) {
         swapVar(&a, &b);
     }
-    if(b == 1) {
+    if(b == 0) {
         return a;
     }
-    if(a == b) {
-        return a;
-    } else if(isEven(a) && isEven(b)) {
-        return 2* gcd(a/2,b/2);
-    } else if(!isEven(a) && isEven(b)) {
-        return gcd(a, b/2);
+
+    if(isEven(a) && isEven(b)) {
+        return 2 * gcdRecursive(a / 2, b / 2);
+    } else if(!isEven(a) && isEven(b) ) {
+        return gcdRecursive(a, b / 2);
     } else if(!isEven(a) && !isEven(b)) {
-        return gcd( (a-2)/2 , b);
-    } else {
-        return 0;
+        return gcdRecursive((a - b) / 2, b);
+    } else if(isEven(a) && !isEven(b)) {
+        return gcdRecursive(a / 2, b);
     }
 
-
+    return gcdRecursive(b, 1);
 }
 
 int isEven(int a) {
@@ -59,5 +70,5 @@ int gcdDijkstra(int a, int b) {
     if(b == 0) {
         return a;
     }
-    return gcd(b, a % b);
+    return gcdDijkstra(b, a % b);
 }
